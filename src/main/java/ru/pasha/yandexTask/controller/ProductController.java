@@ -1,6 +1,7 @@
 package ru.pasha.yandexTask.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pasha.yandexTask.domain.Product;
 import ru.pasha.yandexTask.domain.Request;
 import ru.pasha.yandexTask.domain.Types;
+import ru.pasha.yandexTask.exception.ItemNotFoundException;
 import ru.pasha.yandexTask.exception.ValidationFailedException;
 import ru.pasha.yandexTask.repo.ProductRepo;
 import ru.pasha.yandexTask.response_patterns.MainPattern;
@@ -28,7 +30,7 @@ public class ProductController {
     private final RequestService requestService;
 
     @PostMapping(value = "/imports", produces = "application/json")
-    public ResponseEntity<?> importProduct(@RequestBody(required = false) Request request) throws ParseException {
+    public ResponseEntity<MainPattern> importProduct(@RequestBody(required = false) Request request) throws ParseException {
         try {
             requestService.parseAndSave(request);
 
@@ -39,10 +41,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable UUID id) {
-        ResponseEntity<?> response = productService.delete(id);
+    public ResponseEntity<MainPattern> deleteProduct(@PathVariable UUID id) {
+        try {
+            productService.delete(id);
 
-        return response;
+            return ResponseEntity.ok(new MainPattern((short) 200, "Operation completed successfully"));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MainPattern((short) 404, "Item not found"));
+        }
     }
 
     @GetMapping("/products")

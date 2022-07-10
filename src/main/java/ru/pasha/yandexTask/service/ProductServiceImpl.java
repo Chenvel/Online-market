@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.pasha.yandexTask.domain.Product;
 import ru.pasha.yandexTask.domain.Request;
 import ru.pasha.yandexTask.domain.Types;
+import ru.pasha.yandexTask.exception.ItemNotFoundException;
 import ru.pasha.yandexTask.exception.ValidationFailedException;
 import ru.pasha.yandexTask.repo.ProductRepo;
 
@@ -88,8 +89,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> delete(UUID id) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public void delete(UUID id) throws ItemNotFoundException {
+        Optional<Product> productToDelete = productRepo.findById(id);
+
+        if (productToDelete.isPresent()) {
+            productRepo.delete(productToDelete.get());
+        } else {
+            throw new ItemNotFoundException();
+        }
     }
 
     @Override
