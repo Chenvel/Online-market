@@ -36,7 +36,6 @@ public class ProductController {
         } catch (ValidationFailedException e) {
             return ResponseEntity.badRequest().body(new MainPattern((short) 400, "Validation Failed"));
         }
-
     }
 
     @DeleteMapping("/delete/{id}")
