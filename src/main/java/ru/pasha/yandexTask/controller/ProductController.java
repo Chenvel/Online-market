@@ -28,16 +28,13 @@ public class ProductController {
     private final RequestService requestService;
 
     @PostMapping(value = "/imports", produces = "application/json")
-    public ResponseEntity<?> importProduct(@RequestBody(required = false) Request request) throws ValidationFailedException, ParseException {
+    public ResponseEntity<?> importProduct(@RequestBody(required = false) Request request) throws ParseException {
         try {
             requestService.parseAndSave(request);
 
             return ResponseEntity.ok(new MainPattern((short) 200, "Operation completed successfully"));
-
-//            return new MainPattern(HttpStatus.OK, );
         } catch (ValidationFailedException e) {
             return ResponseEntity.badRequest().body(new MainPattern((short) 400, "Validation Failed"));
-//            return new MainPattern(HttpStatus.BAD_REQUEST, "Validation Failed");
         }
 
     }
