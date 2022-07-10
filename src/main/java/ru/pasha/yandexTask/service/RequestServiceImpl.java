@@ -37,7 +37,23 @@ public class RequestServiceImpl implements RequestService {
 
             // Offer's price must be not null and bigger or equals to 0
 
-            if (product.getType() == Types.OFFER && product.getPrice() < 0) throw new ValidationFailedException();
+            if (product.getType() == Types.OFFER) {
+                extraPrice += product.getPrice();
+                extraCount++;
+
+                if (product.getPrice() < 0) throw new ValidationFailedException();
+
+                if (product.getParentId() != null) {
+                    Optional<Product> optionalParent = productRepo.findById(product.getParentId());
+
+                    if (optionalParent.isPresent()) {
+                        if (optionalParent.get().getType() == Types.OFFER) {
+                            throw new ValidationFailedException();
+                        }
+                    }
+                }
+
+            }
 
             if (product.getType() == Types.CATEGORY && product.getPrice() > 0) throw new ValidationFailedException();
             // Id can't repeat more than 1 time in one request
@@ -50,11 +66,6 @@ public class RequestServiceImpl implements RequestService {
             // Valid
 
             product.setUpdateDate(simpleDateFormat.parse(request.getUpdateDate()));
-
-            if (product.getType() == Types.OFFER) {
-                extraPrice += product.getPrice();
-                extraCount++;
-            }
 
             products.add(productService.save(product, extraPrice, extraCount));
         }
