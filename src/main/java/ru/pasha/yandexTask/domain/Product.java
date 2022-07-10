@@ -49,10 +49,14 @@ public class Product {
     public int getPrice() {
         if (this.type == Types.OFFER) {
             return Objects.requireNonNullElse(this.price, -1);
-        }
+        } else {
+            if (this.price == null) {
+                this.price = 0;
+                return 0;
+            }
 
-        this.price = 0;
-        return this.price;
+            return this.price;
+        }
     }
 
     public void update(Product newProduct) {
@@ -108,7 +112,10 @@ public class Product {
 
         if (count == 0) return 0;
 
-        return (sum + offerPrice) / (count + extraCount);
+        double avgPrice = (sum + offerPrice) / (count + extraCount);
+        this.price = (int) avgPrice;
+
+        return avgPrice;
     }
 
     @Override

@@ -99,7 +99,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public RequestEntity<Product> getNodes(String id) {
-        return null;
+    public Product getNodes(UUID id) throws ItemNotFoundException {
+        Optional<Product> product = productRepo.findById(id);
+
+        if (product.isPresent()) {
+            System.out.println(product.get().getPrice());
+
+            return product.get();
+        } else {
+            throw new ItemNotFoundException();
+        }
     }
 }

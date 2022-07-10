@@ -13,5 +13,5 @@ public interface ProductService {
 
     Product save(Product product, Integer extraPrice, Integer extraCount) throws ValidationFailedException;
     void delete(UUID id) throws ItemNotFoundException;
-    RequestEntity<Product> getNodes(String id);
+    Product getNodes(UUID id) throws ItemNotFoundException;
 }

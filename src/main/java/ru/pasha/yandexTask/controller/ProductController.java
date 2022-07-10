@@ -51,8 +51,12 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products")
-    public List<Product> allProducts() {
-        return productRepo.findAll();
+    @GetMapping("/nodes/{id}")
+    public ResponseEntity<?> allProducts(@PathVariable UUID id) throws ItemNotFoundException {
+        try {
+            return ResponseEntity.ok().body(productService.getNodes(id));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MainPattern((short) 404, "Item not found"));
+        }
     }
 }
