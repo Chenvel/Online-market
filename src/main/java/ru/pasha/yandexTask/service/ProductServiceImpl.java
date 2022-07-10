@@ -31,19 +31,18 @@ public class ProductServiceImpl implements ProductService {
 
         boolean isProductExist = false;
 
+        if (product.getParentId() != null) {
+            Optional<Product> optionalParent = productRepo.findById(product.getParentId());
+
+            // Add parent to offer
+
+            optionalParent.ifPresent(product::setParent);
+        }
+
         // Update product
 
         Optional<Product> oldProductExist = productRepo.findById(product.getId());
         if (oldProductExist.isPresent()) {
-
-            if (product.getParentId() != null) {
-                Optional<Product> optionalParent = productRepo.findById(product.getParentId());
-
-                // Add parent to offer
-
-                optionalParent.ifPresent(product::setParent);
-            }
-
             oldProductExist.get().update(product);
 
             // Clean session from second same object
