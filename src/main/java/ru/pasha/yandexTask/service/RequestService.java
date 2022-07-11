@@ -1,6 +1,5 @@
 package ru.pasha.yandexTask.service;
 
-import org.springframework.stereotype.Component;
 import ru.pasha.yandexTask.domain.Product;
 import ru.pasha.yandexTask.domain.Request;
 import ru.pasha.yandexTask.exception.ValidationFailedException;

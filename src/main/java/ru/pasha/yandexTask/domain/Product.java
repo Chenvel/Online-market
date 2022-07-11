@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -71,7 +70,6 @@ public class Product {
         if (this.parent != null) {
             this.parent.getChildren().remove(this);
             this.parent.setPrice((int) this.parent.averagePrice(0, 0));
-            System.out.println("Category price: " + this.parent.averagePrice(0 ,0));
         }
 
         this.parent = newProduct.getParent();
@@ -119,9 +117,41 @@ public class Product {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (!Objects.equals(id, product.id)) return false;
+        if (!Objects.equals(name, product.name)) return false;
+        if (type != product.type) return false;
+        if (!Objects.equals(price, product.price)) return false;
+        return (Objects.equals(parentId, product.parentId));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (parentId != null ? parentId.hashCode() : 0);
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + (children != null ? children.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", price=" + price +
+                ", updateDate=" + updateDate +
+                ", parentId=" + parentId +
                 '}';
     }
 }

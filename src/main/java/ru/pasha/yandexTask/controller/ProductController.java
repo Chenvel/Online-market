@@ -1,14 +1,10 @@
 package ru.pasha.yandexTask.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.pasha.yandexTask.domain.Product;
 import ru.pasha.yandexTask.domain.Request;
-import ru.pasha.yandexTask.domain.Types;
 import ru.pasha.yandexTask.exception.ItemNotFoundException;
 import ru.pasha.yandexTask.exception.ValidationFailedException;
 import ru.pasha.yandexTask.repo.ProductRepo;
@@ -17,7 +13,6 @@ import ru.pasha.yandexTask.service.ProductService;
 import ru.pasha.yandexTask.service.RequestService;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.UUID;
 
 @RestController

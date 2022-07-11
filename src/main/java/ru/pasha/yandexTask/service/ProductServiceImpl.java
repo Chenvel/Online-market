@@ -1,18 +1,10 @@
 package ru.pasha.yandexTask.service;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.internal.SessionImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.pasha.yandexTask.domain.Product;
-import ru.pasha.yandexTask.domain.Request;
 import ru.pasha.yandexTask.domain.Types;
 import ru.pasha.yandexTask.exception.ItemNotFoundException;
-import ru.pasha.yandexTask.exception.ValidationFailedException;
 import ru.pasha.yandexTask.repo.ProductRepo;
 
 import javax.transaction.Transactional;
@@ -53,8 +45,6 @@ public class ProductServiceImpl implements ProductService {
 
         // Set parent
         if (product.getType() == Types.OFFER) {
-            System.out.println("Product's parent: " + product.getParent());
-
             Product productToSetAvgPrice = product;
 
             double exPrice = extraPrice;
@@ -64,8 +54,6 @@ public class ProductServiceImpl implements ProductService {
                 exPrice = 0.0;
                 exCount = 0;
             }
-
-            System.out.println(exPrice);
 
             while (productToSetAvgPrice != null) {
 
@@ -103,8 +91,6 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepo.findById(id);
 
         if (product.isPresent()) {
-            System.out.println(product.get().getPrice());
-
             return product.get();
         } else {
             throw new ItemNotFoundException();
