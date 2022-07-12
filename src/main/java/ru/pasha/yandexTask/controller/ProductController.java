@@ -13,6 +13,7 @@ import ru.pasha.yandexTask.service.ProductService;
 import ru.pasha.yandexTask.service.RequestService;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -47,11 +48,20 @@ public class ProductController {
     }
 
     @GetMapping("/nodes/{id}")
-    public ResponseEntity<?> allProducts(@PathVariable UUID id) throws ItemNotFoundException {
+    public ResponseEntity<?> allProducts(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok().body(productService.getNodes(id));
         } catch (ItemNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MainPattern((short) 404, "Item not found"));
+        }
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<?> freshProducts(@RequestParam String date) {
+        try {
+            return ResponseEntity.ok().body(productService.sales(date));
+        } catch (ParseException | ValidationFailedException e) {
+            return ResponseEntity.badRequest().body(new MainPattern((short) 400, "Validation Failed"));
         }
     }
 }

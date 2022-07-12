@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import ru.pasha.yandexTask.domain.Product;
 import ru.pasha.yandexTask.domain.Types;
 import ru.pasha.yandexTask.exception.ItemNotFoundException;
+import ru.pasha.yandexTask.exception.ValidationFailedException;
 import ru.pasha.yandexTask.repo.ProductRepo;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Transactional
@@ -95,5 +97,21 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new ItemNotFoundException();
         }
+    }
+
+    @Override
+    public List<Product> sales(String date) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        List<Product> products = new ArrayList<>();
+        Date dateRequest = simpleDateFormat.parse(date);;
+        for (Product product : productRepo.findAll()) {
+            long diffDate = dateRequest.getTime() - product.getUpdateDate().getTime();
+
+            if (diffDate <= 86400000 && diffDate >= 0) {
+                products.add(product);
+            }
+        }
+
+        return products;
     }
 }
