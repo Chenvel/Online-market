@@ -1,8 +1,8 @@
 spring:
   datasource:
-    password: Pasha2008pasha
+    password: password
     url: jdbc:postgresql://localhost:5432/yandex_products
-    username: postgres
+    username: username
   jpa:
     hibernate:
       ddl-auto: update
